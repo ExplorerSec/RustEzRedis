@@ -13,25 +13,19 @@ pub enum Value {
 impl ToString for Value {
     fn to_string(&self) -> String {
         match &self {
-            Self::String(s) => {
-                s.to_owned()
-            },
-            Self::List(list) =>{
-                list.to_owned().into_iter().collect::<Vec<_>>().join(" ")
-            },
-            Self::Hash(hash) =>{
+            Self::String(s) => s.to_owned(),
+            Self::List(list) => list.to_owned().into_iter().collect::<Vec<_>>().join(" "),
+            Self::Hash(hash) => {
                 let mut s = String::new();
-                for (k,v) in hash{
+                for (k, v) in hash {
                     s.push_str(k);
                     s.push(':');
                     s.push_str(v);
                     s.push(',');
                 }
                 s
-            },
-            Self::Set(set) =>{
-                set.to_owned().into_keys().collect::<Vec<_>>().join(" ")
-            },
+            }
+            Self::Set(set) => set.to_owned().into_keys().collect::<Vec<_>>().join(" "),
             Self::Null => "".to_string(),
         }
     }
@@ -132,10 +126,9 @@ impl Database {
         }*/
     }
 
-    pub fn len_include_expired(&self) -> usize{
+    pub fn len_include_expired(&self) -> usize {
         self.data.len()
     }
-
 }
 
 #[cfg(test)]
@@ -180,25 +173,25 @@ mod test {
     }
 
     #[test]
-    fn f3_database_part3(){
+    fn f3_database_part3() {
         let mut db = Database::new();
-        assert_eq!(db.len_include_expired(),0);
+        assert_eq!(db.len_include_expired(), 0);
         let val = Value::String("".into());
         let duration = Some(Duration::from_millis(100));
-        db.set("k1".into(),val.clone());
+        db.set("k1".into(), val.clone());
         db.set_with_duration("k2".into(), val.clone(), duration.clone());
         db.set_with_duration("k3".into(), val.clone(), duration.clone());
-        assert_eq!(db.len_include_expired(),3);
+        assert_eq!(db.len_include_expired(), 3);
         sleep(Duration::from_millis(200));
-        assert_eq!(db.len_include_expired(),3);
-        assert_eq!(db.exists("k2"),false);
-        assert_eq!(db.exists_include_expired("k2"),true);
+        assert_eq!(db.len_include_expired(), 3);
+        assert_eq!(db.exists("k2"), false);
+        assert_eq!(db.exists_include_expired("k2"), true);
         db.clean_expired();
-        assert_eq!(db.exists_include_expired("k2"),false);
-        assert_eq!(db.len_include_expired(),1);
-        
-        assert_eq!(db.del("k2"),None);
+        assert_eq!(db.exists_include_expired("k2"), false);
+        assert_eq!(db.len_include_expired(), 1);
+
+        assert_eq!(db.del("k2"), None);
         assert!(db.del("k1").is_some());
-        assert_eq!(db.len_include_expired(),0);
+        assert_eq!(db.len_include_expired(), 0);
     }
 }
