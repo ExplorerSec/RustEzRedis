@@ -1,6 +1,5 @@
 // src/command/mod.rs
 
-use std::fmt::format;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -59,17 +58,21 @@ impl CommandHandler for Command {
                     RespValue::BulkString(Some(command.args[0].clone()))
                 }
             }
-            "SET" => {
-                if command.args.len() >= 2 {
+            "SET" => match command.args.len() {
+                2 => {
                     db_guard.set(
                         command.args[0].clone(),
                         Value::String(command.args[1].clone()),
                     );
                     RespValue::SimpleString("OK".to_string())
-                } else {
-                    RespValue::Error("ERR wrong number of arguments".to_string())
                 }
-            }
+                3 => {
+                    todo!()
+                    // db_guard.set_with_duration(key, value, duration);
+                    // RespValue::SimpleString("OK".to_string())
+                }
+                _ => RespValue::Error("ERR wrong number of arguments".to_string()),
+            },
             "GET" => {
                 if command.args.len() == 1 {
                     match db_guard.get(&command.args[0]) {
@@ -81,19 +84,35 @@ impl CommandHandler for Command {
                 }
             }
             "DEL" => {
+                match command.args.len() {
+                    0 => {
+                        RespValue::Error("ERR wrong number of arguments".to_string())
+                    },
+                    1 => {
+                        db_guard.del(&command.args[0]);
+                        RespValue::SimpleString("OK".to_string())
+                    },
+                    _ => {
+                        let mut num = 0;
+                        for k in command.args {
+                            if db_guard.del(&k).is_some() {
+                                num += 1;
+                            }
+                        }
+                        RespValue::Integer(num)
+                    },
+                }
+
+            }
+            "EXISTS" => {
                 if command.args.len() >= 1 {
-                    // let mut removed = Vec::new();
-                    let mut not_exist = Vec::new();
+                    let mut num = 0;
                     for k in command.args {
-                        if db_guard.del(&k).is_none() {
-                            not_exist.push(k);
+                        if db_guard.exists(&k) {
+                            num += 1;
                         }
                     }
-                    if not_exist.is_empty() {
-                        RespValue::SimpleString("OK".to_string())
-                    } else {
-                        RespValue::SimpleString(format!("OK, ignored:{}", not_exist.join(",")))
-                    }
+                    RespValue::Integer(num)
                 } else {
                     RespValue::Error("ERR wrong number of arguments".to_string())
                 }
@@ -105,6 +124,8 @@ impl CommandHandler for Command {
 
 #[cfg(test)]
 mod test {
+    use crate::protocol;
+
     use super::*;
     #[test]
     fn f1() {
@@ -113,7 +134,9 @@ mod test {
         let arg2 = RespValue::BulkString(Some("val1".into()));
         let resp = RespValue::Array(vec![name, arg1, arg2]);
 
-        let cmd = Command::parse(resp);
+        let cmd = Command::parse(resp.clone());
+        let hex = protocol::RespParser::serializer(resp);
         println!("{:?}", cmd);
+        println!("{:?}", String::from_utf8(hex));
     }
 }

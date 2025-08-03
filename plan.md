@@ -2,10 +2,10 @@
 
 ```text
 // 字符串操作
-SET key value [EX seconds] [PX milliseconds]
-GET key
-DEL key [key ...]
-EXISTS key [key ...]
+SET key value [EX seconds] [PX milliseconds] ☑️
+GET key                                      ✅
+DEL key [key ...]                            ✅
+EXISTS key [key ...]                         ✅
 INCR key  // 这啥？不支持！
 DECR key  // 这啥？不支持！
 ```
