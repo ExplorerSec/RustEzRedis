@@ -1,10 +1,13 @@
 [package]
 name = "RustEzRedis"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 
+[dependencies]
+bytes = "1.10.1"
+
 [dependencies.tokio]
-version = "1.47"
+version = "1.47.1"
 features = [
     "full"
 ]
