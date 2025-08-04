@@ -1,8 +1,12 @@
 // src/command/mod.rs
+mod handle_macro;
+use handle_macro::*;
 
-mod handle_func;
-use crate::protocol::GeneralError;
-use crate::protocol::RespValue;
+mod handle_string;
+use handle_string::HandleString;
+
+mod handle_hash;
+use handle_hash::HandleHash;
 
 #[derive(Debug)]
 pub struct Command {
@@ -34,6 +38,30 @@ impl Command {
                 Ok(Command { name, args })
             }
             _ => Err("Invalid command format".into()),
+        }
+    }
+
+    pub async fn handle(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        match command.name.as_str() {
+            // System
+            "PING" => HandleString::handle_ping(command),
+            // String
+            "SET" => HandleString::handle_set(db, command).await,
+            "GET" => HandleString::handle_get(db, command).await,
+            "DEL" => HandleString::handle_del(db, command).await,
+            "EXISTS" => HandleString::handle_exists(db, command).await,
+            "INCR" => HandleString::handle_incr(db, command).await,
+            "DECR" => HandleString::handle_decr(db, command).await,
+            // Hash
+            "HSET" => HandleHash::handle_hset(db, command).await,
+            "HGET" => HandleHash::handle_hget(db, command).await,
+            "HGETALL" => HandleHash::handle_hgetall(db, command).await,
+            "HDEL" => HandleHash::handle_hdel(db, command).await,
+            "HEXISTS" => HandleHash::handle_hexists(db, command).await,
+            "HLEN" => HandleHash::handle_hlen(db, command).await,
+            "HKEYS" => HandleHash::handle_hkeys(db, command).await,
+            "HVALS" => HandleHash::handle_hvals(db, command).await,
+            _ => RespValue::Error(format!("ERR unknown command '{}'", command.name)),
         }
     }
 }
