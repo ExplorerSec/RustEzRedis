@@ -1,47 +1,56 @@
+# 功能支持
+
+> ☑️ 部分支持该功能
+> ✅ 完全支持该功能
+> ⏺️ 暂未支持该功能
+
 ### 1. 基本数据操作
 
-```text
+```rs
 // 字符串操作
-SET key value [EX seconds] [PX milliseconds] ☑️
+SET key value [EX seconds] [PX milliseconds] ✅
 GET key                                      ✅
 DEL key [key ...]                            ✅
 EXISTS key [key ...]                         ✅
-INCR key  // 这啥？不支持！
-DECR key  // 这啥？不支持！
+INCR key                                     ✅
+DECR key                                     ✅
 ```
 
-```text
+```rs
 // 哈希操作
-HSET key field value
-HGET key field
-HGETALL key
-HDEL key field [field ...]
+HSET key field value                         ⏺️
+HGET key field                               ⏺️
+HGETALL key                                  ⏺️
+HDEL key field [field ...]                   ⏺️
 ```
 
-```text
+```rs
 // 列表操作
-LPUSH key element [element ...]
-RPUSH key element [element ...]
-LPOP key
-RPOP key
-LRANGE key start stop
+LPUSH key element [element ...]              ⏺️
+RPUSH key element [element ...]              ⏺️
+LPOP key                                     ⏺️
+RPOP key                                     ⏺️
+LRANGE key start stop                        ⏺️
 ```
 
-```text
+```rs
 // 集合操作
-SADD key member [member ...]
-SMEMBERS key
-SREM key member [member ...]
-SISMEMBER key member
+SADD key member [member ...]                 ⏺️
+SMEMBERS key                                 ⏺️
+SREM key member [member ...]                 ⏺️
+SISMEMBER key member                         ⏺️
 ```
 
 ### 2. 系统操作
 
-```text
-PING [message]
-ECHO message
-QUIT
-INFO [section]
-FLUSHDB
-FLUSHALL
+```rs
+PING [message]                               ✅
+ECHO message                                 ⏺️
+QUIT                                         ⏺️
+INFO [section]                               ⏺️
+FLUSHDB                                      ⏺️
+FLUSHALL                                     ⏺️
 ```
+
+
+

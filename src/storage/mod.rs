@@ -82,7 +82,7 @@ impl Database {
         self.data.remove(key)
     }
 
-    pub fn exists_include_expired(&self, key: &str) -> bool {
+    fn exists_include_expired(&self, key: &str) -> bool {
         self.data.contains_key(key)
     }
 
@@ -126,7 +126,7 @@ impl Database {
         }*/
     }
 
-    pub fn len_include_expired(&self) -> usize {
+    fn len_include_expired(&self) -> usize {
         self.data.len()
     }
 }

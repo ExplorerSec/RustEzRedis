@@ -1,5 +1,5 @@
 // src/server/mod.rs
-use crate::command::{Command, CommandHandler};
+use crate::command::Command;
 use crate::protocol::{GeneralError, RespParser};
 use crate::storage::Database;
 use std::sync::Arc;
@@ -57,6 +57,7 @@ impl RedisServer {
                 let response = Command::handle(db.clone(), command).await;
                 let response_bytes = RespParser::serializer(response);
                 socket.write_all(&response_bytes).await?;
+                socket.flush().await?;
             }
         }
     }
