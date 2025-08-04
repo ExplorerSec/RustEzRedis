@@ -5,14 +5,6 @@ use crate::command::handle_macro::*;
 
 pub struct HandleString;
 impl HandleString {
-    pub fn handle_ping(command: Command) -> RespValue {
-        if command.args.is_empty() {
-            RespValue::SimpleString("PONG".to_string())
-        } else {
-            RespValue::BulkString(Some(command.args[0].clone()))
-        }
-    }
-
     pub async fn handle_set(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
         let mut db_guard = db.lock().await;
         match command.args.len() {

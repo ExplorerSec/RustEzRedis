@@ -38,6 +38,8 @@ LINDEX key index                             ✅
 LRANGE key start stop                        ✅
 LLEN key                                     ✅
 LSET key index value                         ✅
+LREM key count value                         ⏺️
+LTRIM key start stop                         ⏺️
 ```
 
 ```rs
@@ -47,17 +49,25 @@ SCARD key                                    ✅
 SMEMBERS key                                 ✅
 SREM key member [member ...]                 ✅
 SISMEMBER key member                         ✅
+SINTER key1 [key2]                           ⏺️
+SINTERSTORE destination key1 [key2]          ⏺️
+SUNION key1 [key2]                           ⏺️
+SUNIONSTORE destination key1 [key2]          ⏺️
+SDIFF key1 [key2]                            ⏺️
+SDIFFSTORE destination key1 [key2]           ⏺️
 ```
 
 ### 2. 系统操作
 
 ```rs
 PING [message]                               ✅
-ECHO message                                 ⏺️
+ECHO message                                 ✅
 QUIT                                         ⏺️
 INFO [section]                               ⏺️
 FLUSHDB                                      ⏺️
 FLUSHALL                                     ⏺️
+AUTH                                         ⏺️
+SAVE                                         ⏺️
 ```
 
 

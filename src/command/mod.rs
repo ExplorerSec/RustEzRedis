@@ -1,6 +1,8 @@
 // src/command/mod.rs
 mod handle_macro;
 use handle_macro::*;
+mod handle_sys;
+use handle_sys::HandleSys;
 mod handle_string;
 use handle_string::HandleString;
 mod handle_hash;
@@ -46,7 +48,8 @@ impl Command {
     pub async fn handle(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
         match command.name.as_str() {
             // System
-            "PING" => HandleString::handle_ping(command),
+            "PING" => HandleSys::handle_ping(command),
+            "ECHO" => HandleSys::handle_echo(command),
             // String
             "SET" => HandleString::handle_set(db, command).await,
             "GET" => HandleString::handle_get(db, command).await,
