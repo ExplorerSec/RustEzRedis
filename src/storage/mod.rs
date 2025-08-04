@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -6,7 +6,7 @@ pub enum Value {
     String(String),
     List(VecDeque<String>),
     Hash(HashMap<String, String>),
-    Set(HashMap<String, bool>),
+    Set(HashSet<String>),
     Null,
 }
 
@@ -25,7 +25,7 @@ impl ToString for Value {
                 }
                 s
             }
-            Self::Set(set) => set.to_owned().into_keys().collect::<Vec<_>>().join(" "),
+            Self::Set(set) => set.to_owned().into_iter().collect::<Vec<_>>().join(" "),
             Self::Null => "".to_string(),
         }
     }
@@ -77,7 +77,7 @@ impl Database {
         self.data.insert(key, (value, None));
     }
 
-    pub fn set_with_expiretime(&mut self, key: String, value: Value, expire_in: Option<u128>) {
+    fn set_with_expiretime(&mut self, key: String, value: Value, expire_in: Option<u128>) {
         self.data.insert(key, (value, expire_in));
     }
 

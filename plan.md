@@ -42,10 +42,11 @@ LSET key index value                         ✅
 
 ```rs
 // 集合操作
-SADD key member [member ...]                 ⏺️
-SMEMBERS key                                 ⏺️
-SREM key member [member ...]                 ⏺️
-SISMEMBER key member                         ⏺️
+SADD key member [member ...]                 ✅
+SCARD key                                    ✅
+SMEMBERS key                                 ✅
+SREM key member [member ...]                 ✅
+SISMEMBER key member                         ✅
 ```
 
 ### 2. 系统操作

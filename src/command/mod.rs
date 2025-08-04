@@ -1,15 +1,14 @@
 // src/command/mod.rs
 mod handle_macro;
 use handle_macro::*;
-
 mod handle_string;
 use handle_string::HandleString;
-
 mod handle_hash;
 use handle_hash::HandleHash;
-
 mod handle_list;
 use handle_list::HandleList;
+mod handle_set;
+use handle_set::HandleSet;
 
 #[derive(Debug)]
 pub struct Command {
@@ -73,6 +72,12 @@ impl Command {
             "LINDEX" => HandleList::handle_lindex(db, command).await,
             "LSET" => HandleList::handle_lset(db, command).await,
             "LRANGE" => HandleList::handle_lrange(db, command).await,
+            // Set
+            "SADD" => HandleSet::handle_sadd(db, command).await,
+            "SCARD" => HandleSet::handle_scard(db, command).await,
+            "SMEMBERS" => HandleSet::handle_smembers(db, command).await,
+            "SREM" => HandleSet::handle_srem(db, command).await,
+            "SISMEMBER" => HandleSet::handle_sismember(db, command).await,
             _ => RespValue::Error(format!("ERR unknown command '{}'", command.name)),
         }
     }
