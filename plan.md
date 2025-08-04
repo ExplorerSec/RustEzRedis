@@ -30,13 +30,14 @@ HVALS key                                    ✅
 
 ```rs
 // 列表操作
-LPUSH key element [element ...]              ⏺️
-RPUSH key element [element ...]              ⏺️
-LPOP key                                     ⏺️
-RPOP key                                     ⏺️
-LRANGE key start stop                        ⏺️
-LLEN key                                     ⏺️
-LSET key index value                         ⏺️
+LPUSH key element [element ...]              ✅
+RPUSH key element [element ...]              ✅
+LPOP key                                     ✅
+RPOP key                                     ✅
+LINDEX key index                             ✅
+LRANGE key start stop                        ✅
+LLEN key                                     ✅
+LSET key index value                         ✅
 ```
 
 ```rs

@@ -8,6 +8,9 @@ use handle_string::HandleString;
 mod handle_hash;
 use handle_hash::HandleHash;
 
+mod handle_list;
+use handle_list::HandleList;
+
 #[derive(Debug)]
 pub struct Command {
     pub name: String,
@@ -61,6 +64,15 @@ impl Command {
             "HLEN" => HandleHash::handle_hlen(db, command).await,
             "HKEYS" => HandleHash::handle_hkeys(db, command).await,
             "HVALS" => HandleHash::handle_hvals(db, command).await,
+            // List
+            "LPUSH" => HandleList::handle_lpush(db, command).await,
+            "RPUSH" => HandleList::handle_rpush(db, command).await,
+            "LPOP" => HandleList::handle_lpop(db, command).await,
+            "RPOP" => HandleList::handle_rpop(db, command).await,
+            "LLEN" => HandleList::handle_llen(db, command).await,
+            "LINDEX" => HandleList::handle_lindex(db, command).await,
+            "LSET" => HandleList::handle_lset(db, command).await,
+            "LRANGE" => HandleList::handle_lrange(db, command).await,
             _ => RespValue::Error(format!("ERR unknown command '{}'", command.name)),
         }
     }

@@ -18,9 +18,16 @@ macro_rules! RespOK {
     };
 }
 
+macro_rules! RespErrNumWrong {
+    () => {
+        RespValue::Error("ERR value is not an integer or out of range".to_string())
+    };
+}
+
 pub(super) use RespErrArgNum;
 pub(super) use RespErrType;
 pub(super) use RespOK;
+pub(super) use RespErrNumWrong;
 
 pub(super) use std::sync::Arc;
 pub(super) use tokio::sync::Mutex;
