@@ -18,10 +18,14 @@ DECR key                                     ✅
 
 ```rs
 // 哈希操作
-HSET key field value                         ⏺️
-HGET key field                               ⏺️
-HGETALL key                                  ⏺️
-HDEL key field [field ...]                   ⏺️
+HSET key field value [field value ...]       ✅
+HGET key field                               ✅
+HGETALL key                                  ✅
+HDEL key field [field ...]                   ✅
+HEXISTS key field                            ✅
+HLEN key                                     ✅
+HKEYS key                                    ✅
+HVALS key                                    ✅
 ```
 
 ```rs
@@ -31,6 +35,8 @@ RPUSH key element [element ...]              ⏺️
 LPOP key                                     ⏺️
 RPOP key                                     ⏺️
 LRANGE key start stop                        ⏺️
+LLEN key                                     ⏺️
+LSET key index value                         ⏺️
 ```
 
 ```rs

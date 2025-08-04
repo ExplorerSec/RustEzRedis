@@ -58,6 +58,21 @@ impl Database {
         })
     }
 
+    pub fn get_mut(&mut self, key: &str) -> Option<&mut Value> {
+        self.data.get_mut(key).and_then(|(value, expire)| {
+            if let Some(expire_time) = expire {
+                let now = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis() as u128;
+                if now > *expire_time {
+                    return None;
+                }
+            }
+            Some(value)
+        })
+    }
+
     pub fn set(&mut self, key: String, value: Value) {
         self.data.insert(key, (value, None));
     }
