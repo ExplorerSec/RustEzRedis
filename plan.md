@@ -68,6 +68,7 @@ FLUSHDB                                      ⏺️
 FLUSHALL                                     ⏺️
 AUTH                                         ⏺️
 SAVE                                         ⏺️
+CLEAN                                        ✅   Non-Standard
 ```
 
 

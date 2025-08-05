@@ -50,6 +50,7 @@ impl Command {
             // System
             "PING" => HandleSys::handle_ping(command),
             "ECHO" => HandleSys::handle_echo(command),
+            "CLEAN" => HandleSys::handle_clean(db, command).await,
             // String
             "SET" => HandleString::handle_set(db, command).await,
             "GET" => HandleString::handle_get(db, command).await,

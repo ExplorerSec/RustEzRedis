@@ -1,9 +1,8 @@
 use crate::command::Command;
 use crate::command::handle_macro::*;
 
-
 pub struct HandleSys;
-impl HandleSys{
+impl HandleSys {
     pub fn handle_ping(command: Command) -> RespValue {
         if command.args.is_empty() {
             RespValue::SimpleString("PONG".to_string())
@@ -12,10 +11,20 @@ impl HandleSys{
         }
     }
 
-    pub fn handle_echo(command: Command) -> RespValue{
-        if command.args.len() ==1{
+    pub fn handle_echo(command: Command) -> RespValue {
+        if command.args.len() == 1 {
             RespValue::BulkString(Some(command.args[0].clone()))
-        }else {
+        } else {
+            RespErrArgNum!()
+        }
+    }
+
+    pub async fn handle_clean(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.is_empty() {
+            let mut db_guard = db.lock().await;
+            db_guard.clean_expired();
+            RespOK!()
+        } else {
             RespErrArgNum!()
         }
     }
