@@ -86,7 +86,7 @@ impl HandleString {
 
     pub async fn handle_exists(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
         let db_guard = db.lock().await;
-        if command.args.len() >= 1 {
+        if !command.args.is_empty() {
             let mut num = 0;
             for k in command.args {
                 if db_guard.exists(&k) {
@@ -107,7 +107,7 @@ impl HandleString {
                 Some(val) => {
                     if let Value::String(s) = val {
                         if let Ok(mut n) = s.parse::<i64>() {
-                            n = n + 1;
+                            n += 1;
                             db_guard.set(key, Value::String(n.to_string()));
                             return RespValue::Integer(n);
                         }
@@ -132,7 +132,7 @@ impl HandleString {
                 Some(val) => {
                     if let Value::String(s) = val {
                         if let Ok(mut n) = s.parse::<i64>() {
-                            n = n - 1;
+                            n -= 1;
                             db_guard.set(key, Value::String(n.to_string()));
                             return RespValue::Integer(n);
                         }

@@ -38,8 +38,8 @@ LINDEX key index                             ✅
 LRANGE key start stop                        ✅
 LLEN key                                     ✅
 LSET key index value                         ✅
-LREM key count value                         ⏺️
-LTRIM key start stop                         ⏺️
+LREM key count value                         ✅
+LTRIM key start stop                         ✅   Different Behavior when UB
 ```
 
 ```rs

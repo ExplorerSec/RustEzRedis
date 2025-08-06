@@ -21,7 +21,7 @@ impl HandleSet {
                 }
                 None => {
                     let set: HashSet<String> =
-                        HashSet::from_iter(command.args.iter().skip(1).map(|x| x.clone()));
+                        HashSet::from_iter(command.args.iter().skip(1).cloned());
                     let num = set.len();
                     db_guard.set(command.args[0].clone(), Value::Set(set));
                     RespValue::Integer(num as i64)

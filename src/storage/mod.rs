@@ -14,7 +14,7 @@ impl ToString for Value {
     fn to_string(&self) -> String {
         match &self {
             Self::String(s) => s.to_owned(),
-            Self::List(list) => list.to_owned().into_iter().collect::<Vec<_>>().join(" "),
+            Self::List(list) => list.iter().cloned().collect::<Vec<_>>().join(" "),
             Self::Hash(hash) => {
                 let mut s = String::new();
                 for (k, v) in hash {
@@ -25,7 +25,7 @@ impl ToString for Value {
                 }
                 s
             }
-            Self::Set(set) => set.to_owned().into_iter().collect::<Vec<_>>().join(" "),
+            Self::Set(set) => set.iter().cloned().collect::<Vec<_>>().join(" "),
             Self::Null => "".to_string(),
         }
     }
@@ -49,7 +49,7 @@ impl Database {
                 let now = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
                     .unwrap()
-                    .as_millis() as u128;
+                    .as_millis();
                 if now > *expire_time {
                     return None;
                 }
@@ -64,7 +64,7 @@ impl Database {
                 let now = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
                     .unwrap()
-                    .as_millis() as u128;
+                    .as_millis();
                 if now > *expire_time {
                     return None;
                 }
@@ -86,8 +86,8 @@ impl Database {
             let now = SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
-                .as_millis() as u128;
-            now + duration_inner.as_millis() as u128
+                .as_millis();
+            now + duration_inner.as_millis()
         });
 
         self.data.insert(key, (value, expire_time));
@@ -109,7 +109,7 @@ impl Database {
                     let now_time = SystemTime::now()
                         .duration_since(UNIX_EPOCH)
                         .unwrap()
-                        .as_millis() as u128;
+                        .as_millis();
                     time > now_time
                 }
             }

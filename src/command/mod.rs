@@ -76,6 +76,8 @@ impl Command {
             "LINDEX" => HandleList::handle_lindex(db, command).await,
             "LSET" => HandleList::handle_lset(db, command).await,
             "LRANGE" => HandleList::handle_lrange(db, command).await,
+            "LREM" => HandleList::handle_lrem(db, command).await,
+            "LTRIM" => HandleList::handle_ltrim(db, command).await,
             // Set
             "SADD" => HandleSet::handle_sadd(db, command).await,
             "SCARD" => HandleSet::handle_scard(db, command).await,
