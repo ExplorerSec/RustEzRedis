@@ -51,6 +51,7 @@ impl Command {
             "PING" => HandleSys::handle_ping(command),
             "ECHO" => HandleSys::handle_echo(command),
             "CLEAN" => HandleSys::handle_clean(db, command).await,
+            "FLUSHDB" => HandleSys::handle_flushdb(db, command).await,
             // String
             "SET" => HandleString::handle_set(db, command).await,
             "GET" => HandleString::handle_get(db, command).await,
@@ -84,6 +85,12 @@ impl Command {
             "SMEMBERS" => HandleSet::handle_smembers(db, command).await,
             "SREM" => HandleSet::handle_srem(db, command).await,
             "SISMEMBER" => HandleSet::handle_sismember(db, command).await,
+            "SINTER" => HandleSet::handle_sinter(db, command).await,
+            "SINTERSTORE" => HandleSet::handle_sinterstore(db, command).await,
+            "SUNION" => HandleSet::handle_sunion(db, command).await,
+            "SUNIONSTORE" => HandleSet::handle_sunionstore(db, command).await,
+            "SDIFF" => HandleSet::handle_sdiff(db, command).await,
+            "SDIFFSTORE" => HandleSet::handle_sdiffstore(db, command).await,
             _ => RespValue::Error(format!("ERR unknown command '{}'", command.name)),
         }
     }

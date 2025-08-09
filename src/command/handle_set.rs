@@ -98,4 +98,159 @@ impl HandleSet {
             RespErrArgNum!()
         }
     }
+
+    pub async fn handle_sinter(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.len() >= 2 {
+            let db_guard = db.lock().await;
+            let mut set = match db_guard.get(&command.args[0]) {
+                Some(Value::Set(set)) => set.clone(),
+                None => HashSet::new(),
+                _ => return RespErrType!(),
+            };
+            for other_arg in command.args.iter().skip(1) {
+                match db_guard.get(other_arg) {
+                    Some(Value::Set(other_set)) => {
+                        set = set.intersection(other_set).cloned().collect();
+                    }
+                    None => return RespValue::Array(Vec::new()),
+                    _ => return RespErrType!(),
+                }
+            }
+            RespValue::Array(Vec::from_iter(
+                set.into_iter().map(|s| RespValue::BulkString(Some(s))),
+            ))
+        } else {
+            RespErrArgNum!()
+        }
+    }
+
+    pub async fn handle_sinterstore(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.len() >= 2 {
+            let mut db_guard = db.lock().await;
+            let mut set = match db_guard.get(&command.args[1]) {
+                Some(Value::Set(set)) => set.clone(),
+                None => HashSet::new(),
+                _ => return RespErrType!(),
+            };
+            for other_arg in command.args.iter().skip(2) {
+                match db_guard.get(other_arg) {
+                    Some(Value::Set(other_set)) => {
+                        set = set.intersection(other_set).cloned().collect();
+                    }
+                    None => {
+                        set = HashSet::new();
+                        break;
+                    }
+                    _ => return RespErrType!(),
+                }
+            }
+            let len = set.len() as i64;
+            db_guard.set(command.args[0].to_string(), Value::Set(set));
+            RespValue::Integer(len)
+        } else {
+            RespErrArgNum!()
+        }
+    }
+
+    pub async fn handle_sunion(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.len() >= 2 {
+            let db_guard = db.lock().await;
+            let mut set = match db_guard.get(&command.args[0]) {
+                Some(Value::Set(set)) => set.clone(),
+                None => HashSet::new(),
+                _ => return RespErrType!(),
+            };
+            for other_arg in command.args.iter().skip(1) {
+                match db_guard.get(other_arg) {
+                    Some(Value::Set(other_set)) => {
+                        set = set.union(other_set).cloned().collect();
+                    }
+                    None => {}
+                    _ => return RespErrType!(),
+                }
+            }
+            RespValue::Array(Vec::from_iter(
+                set.into_iter().map(|s| RespValue::BulkString(Some(s))),
+            ))
+        } else {
+            RespErrArgNum!()
+        }
+    }
+
+    pub async fn handle_sunionstore(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.len() >= 2 {
+            let mut db_guard = db.lock().await;
+            let mut set = match db_guard.get(&command.args[1]) {
+                Some(Value::Set(set)) => set.clone(),
+                None => HashSet::new(),
+                _ => return RespErrType!(),
+            };
+            for other_arg in command.args.iter().skip(2) {
+                match db_guard.get(other_arg) {
+                    Some(Value::Set(other_set)) => {
+                        set = set.union(other_set).cloned().collect();
+                    }
+                    None => {}
+                    _ => return RespErrType!(),
+                }
+            }
+            let len = set.len() as i64;
+            db_guard.set(command.args[0].to_string(), Value::Set(set));
+            RespValue::Integer(len)
+        } else {
+            RespErrArgNum!()
+        }
+    }
+
+    pub async fn handle_sdiff(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        match command.args.len() {
+            2 => {
+                let db_guard = db.lock().await;
+                let set0 = match db_guard.get(&command.args[0]) {
+                    Some(Value::Set(set)) => set.clone(),
+                    None => HashSet::new(),
+                    _ => return RespErrType!(),
+                };
+                let set1 = match db_guard.get(&command.args[1]) {
+                    Some(Value::Set(set)) => set.clone(),
+                    None => HashSet::new(),
+                    _ => return RespErrType!(),
+                };
+                RespValue::Array(Vec::from_iter(
+                    set0.difference(&set1)
+                        .map(|s| RespValue::BulkString(Some(s.clone()))),
+                ))
+            }
+            _ => {
+                RespErrArgNum!()
+            }
+        }
+    }
+
+    pub async fn handle_sdiffstore(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        match command.args.len() {
+            3 => {
+                let mut db_guard = db.lock().await;
+                let set0 = match db_guard.get(&command.args[1]) {
+                    Some(Value::Set(set)) => set.clone(),
+                    None => HashSet::new(),
+                    _ => return RespErrType!(),
+                };
+                let set1 = match db_guard.get(&command.args[2]) {
+                    Some(Value::Set(set)) => set.clone(),
+                    None => HashSet::new(),
+                    _ => return RespErrType!(),
+                };
+
+                let set: HashSet<String> = set0.difference(&set1).cloned().collect();
+                let len = set.len() as i64;
+                db_guard.set(command.args[0].to_string(), Value::Set(set));
+
+                RespValue::Integer(len)
+            }
+            _ => {
+                RespErrArgNum!()
+            }
+        }
+    }
 }

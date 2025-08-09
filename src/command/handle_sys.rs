@@ -28,4 +28,14 @@ impl HandleSys {
             RespErrArgNum!()
         }
     }
+
+    pub async fn handle_flushdb(db: Arc<Mutex<Database>>, command: Command) -> RespValue {
+        if command.args.is_empty() {
+            let mut db_guard = db.lock().await;
+            db_guard.data.clear();
+            RespOK!()
+        } else {
+            RespErrArgNum!()
+        }
+    }
 }

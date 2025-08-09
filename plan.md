@@ -49,12 +49,12 @@ SCARD key                                    ✅
 SMEMBERS key                                 ✅
 SREM key member [member ...]                 ✅
 SISMEMBER key member                         ✅
-SINTER key1 [key2]                           ⏺️
-SINTERSTORE destination key1 [key2]          ⏺️
-SUNION key1 [key2]                           ⏺️
-SUNIONSTORE destination key1 [key2]          ⏺️
-SDIFF key1 [key2]                            ⏺️
-SDIFFSTORE destination key1 [key2]           ⏺️
+SINTER key1 [key2..]                         ✅  Probably Different Behavior when UB
+SINTERSTORE destination key1 [key2..]        ✅  Probably Different Behavior when UB
+SUNION key1 [key2]                           ✅  Probably Different Behavior when UB
+SUNIONSTORE destination key1 [key2]          ✅  Probably Different Behavior when UB
+SDIFF key1 key2                              ✅  Probably Different Behavior when UB
+SDIFFSTORE destination key1 key2             ✅  Probably Different Behavior when UB
 ```
 
 ### 2. 系统操作
@@ -64,7 +64,7 @@ PING [message]                               ✅
 ECHO message                                 ✅
 QUIT                                         ⏺️
 INFO [section]                               ⏺️
-FLUSHDB                                      ⏺️
+FLUSHDB                                      ✅
 FLUSHALL                                     ⏺️
 AUTH                                         ⏺️
 SAVE                                         ⏺️
